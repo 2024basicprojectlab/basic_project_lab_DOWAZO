@@ -1,4 +1,4 @@
-import 'package:basicprojectlab_team/widgets/text_filed_input.dart';
+import 'package:team_project_ui_6/widgets/text_filed_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
