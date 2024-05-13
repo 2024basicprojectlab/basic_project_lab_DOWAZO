@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_project_ui_6/Data/User.dart';
 import 'package:team_project_ui_6/register.dart';
-import 'home_cubit.dart';
 import 'home_page.dart';
 import 'login.dart';
 
@@ -19,19 +18,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.white,
       ),
-
-      routes: <String, WidgetBuilder>{
-        '/login': (BuildContext context) => Login(),
-        /*
-        '/start': (context) {
-          return new BlocProvider(
-            create: (_) => HomeCubit(),
-            child: HomePage(),
-          );
-        }
-         */
-      },
-
       home: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
