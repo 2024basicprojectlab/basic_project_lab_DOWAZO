@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'app.dart';
-import 'login.dart';
+import 'package:team_project_ui_6/Colors.dart';
 
 void main() {
   //runApp(MyApp());
-  runApp(MaterialApp(
+  runApp(
+  MaterialApp(
     debugShowCheckedModeBanner: false,
-    title: 'NAVI',
-    theme: ThemeData(primarySwatch: Colors.deepOrange),
+    title: 'DOWAZO',
+    theme: ThemeData.dark().copyWith(
+      scaffoldBackgroundColor: mobileBackgroundColor,
+    ),
     //home: Test(),
     home: MyApp(),
   ));

@@ -1,37 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false, // 디버그 메시지 없애기
-      home: Scaffold(
-        appBar: AppBar(
-          title: Center(child: Text('DOWAZO')), // 타이틀 이름 변경
-        ),
-        body: SingleChildScrollView(
-          // 이미지 목록을 보여주는 위젯 호출
-          child: ImageList(),
-        ),
-        floatingActionButton: FloatingActionButton(
-          // 우측 하단의 +동그라미 버튼
-          onPressed: () {
-            // 버튼을 눌렀을 때의 동작 추가
-            // 새글 추가 동작 등을 여기에 구현
-          },
-          child: Icon(Icons.add), // 아이콘은 추가 아이콘으로 설정
-        ),
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.endFloat, // 우측 하단에 위치하도록 설정
-      ),
-    );
-  }
-}
-
 class ImageList extends StatelessWidget {
   // 이미지 URL 목록
   final List<String> imageUrls = [
