@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_project_ui_6/Data/User.dart';
 // import 'home_cubit.dart';
-import 'package:team_project_ui_6/UI/login_ui.dart';
-import 'package:team_project_ui_6/UI/signup_ui.dart';
-import 'package:team_project_ui_6/Colors.dart';
+import 'package:team_project_ui_6/register.dart';
+import 'package:team_project_ui_6/UI/colors.dart';
+
+import 'login.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
                       child: Text("로그인"),
                       onPressed: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => LoginScreen()));
+                            MaterialPageRoute(builder: (context) => Login()));
                       },
                     ),
                     SizedBox(
@@ -52,7 +53,7 @@ class MyApp extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => SignupScreen()));
+                                builder: (context) => Register()));
                       },
                     ),
                   ]

@@ -12,17 +12,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  // 이미지 URL 목록
-  final List<String> imageUrls = [
-    'https://via.placeholder.com/150',
-    'https://via.placeholder.com/200',
-    'https://via.placeholder.com/250',
-    'https://via.placeholder.com/300',
-    'https://via.placeholder.com/350',
-    'https://via.placeholder.com/400',
-    // 원하는 만큼 이미지 URL 추가
-  ];
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -129,7 +118,14 @@ class ImageItem extends StatelessWidget {
           Wrap(
             spacing: 5,
             runSpacing: 5,
-            children: tagList.map((tag) => Chip(label: Text(tag))).toList(),
+            children: tagList.map((tag) => Chip(label:
+              ButtonTheme(
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text(tag),
+                ),
+              ),
+            )).toList(),
           ),
         ],
       ),

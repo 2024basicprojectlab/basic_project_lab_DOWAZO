@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:team_project_ui_6/week_1/page5.dart';
+import 'package:team_project_ui_6/home_page.dart';
 
 class Search extends StatefulWidget {
   const Search({super.key});
@@ -30,7 +30,7 @@ class _SearchState extends State<Search> {
   void cardClickEvent(BuildContext context, int index) {
     String content = itemContents[index];
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ContentPage(content: content)));
+        MaterialPageRoute(builder: (context) => HomePage()));
   }
 
   @override
@@ -82,7 +82,7 @@ class _SearchState extends State<Search> {
                       elevation: 3,
                       shape: RoundedRectangleBorder(
                         borderRadius:
-                            BorderRadius.all(Radius.elliptical(20, 20)),
+                        BorderRadius.all(Radius.elliptical(20, 20)),
                       ),
                       child: Center(
                         child: ListTile(

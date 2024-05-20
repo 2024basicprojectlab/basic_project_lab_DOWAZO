@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:team_project_ui_6/firebase_options.dart';
 import 'package:team_project_ui_6/UI/colors.dart';
 import 'app.dart';
-import 'package:team_project_ui_6/Colors.dart';
 
-<<<<<<< HEAD
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,22 +19,11 @@ void main() async {
     ),
   );
 
-  runApp(MaterialApp(
-=======
-void main() {
-  //runApp(MyApp());
   runApp(
-  MaterialApp(
->>>>>>> f62fab1a5ae1f7c4392049991fcd8b65cda2bda8
-    debugShowCheckedModeBanner: false,
-    title: 'DOWAZO',
-    theme: ThemeData.dark().copyWith(
-      scaffoldBackgroundColor: mobileBackgroundColor,
-    ),
-<<<<<<< HEAD
-=======
-    //home: Test(),
->>>>>>> f62fab1a5ae1f7c4392049991fcd8b65cda2bda8
-    home: MyApp(),
-  ));
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'DOWAZO',
+        theme: ThemeData.dark(),
+        home: MyApp(),
+      ));
 }
