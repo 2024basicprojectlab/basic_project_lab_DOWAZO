@@ -38,9 +38,7 @@ class _PostingState extends State<Posting> {
 
   void post(BuildContext context) async {
     try {
-      if (_titlecontroller.text == "" ||
-          _tagList.length == 0 ||
-          _image == null) {
+      if(_titlecontroller.text == "" || _tagList.length == 0 || _image == null) {
         showSnackBar(context);
       } else {
         var countQuerySnapshot = await firestore.collection('Text_info').get();
@@ -48,28 +46,33 @@ class _PostingState extends State<Posting> {
         String text_name = "${onUser!.id}_$num";
 
         Uint8List imageData = await _image!.readAsBytes();
-        await firebaseStorage
-            .ref('image_data/${text_name}')
-            .putData(imageData, SettableMetadata(contentType: "image/jpeg"));
+        await firebaseStorage.ref('image_data/${text_name}').putData(
+            imageData, SettableMetadata(contentType: "image/jpeg"));
 
         Reference _ref = firebaseStorage.ref('image_data/${text_name}');
         String _url = await _ref.getDownloadURL();
 
-        firestore.collection('Text_info').doc(text_name).set({
-          'text_id': text_name,
-          'title': _titlecontroller.text,
-          'tags': _tagList,
-          'image_url': _url
-        });
+        firestore.collection('Text_info').doc(text_name).set(
+            {'text_id': text_name, 'title':_titlecontroller.text, 'tags':_tagList, 'image_url': _url});
+
+        for(String tag in _tagList) {
+          // 'Tag_info' 컬렉션에서 해당 태그가 있는지 확인
+          DocumentSnapshot tagSnapshot = await firestore.collection('Tag_info').doc(tag).get();
+
+          // 해당 태그가 없는 경우에만 추가
+          if (!tagSnapshot.exists) {
+            // 'Tag_info' 컬렉션에 태그 추가
+            await firestore.collection('Tag_info').doc(tag).set({});
+          }
+        }
 
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => FeedScreen()));
+            context,
+            MaterialPageRoute(builder: (context) => FeedScreen())
+        );
       }
-    } on FirebaseAuthException catch (e) {
-      print(e.toString());
-    } catch (e) {
-      print(e.toString());
-    }
+    } on FirebaseAuthException catch(e) {print(e.toString());}
+    catch(e) {print(e.toString());}
   }
 
   Widget _buildPhotoArea() {

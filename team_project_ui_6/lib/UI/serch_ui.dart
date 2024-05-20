@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:team_project_ui_6/UI/tagged_page.dart';
 import 'package:team_project_ui_6/week_1/page5.dart';
 
 class Search extends StatefulWidget {
@@ -10,28 +12,6 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   String searchText = ''; // 검색어
-  List<String> items = [
-    '자료구조',
-    '확률과 통계',
-    'C언어',
-    'Python',
-    '기초프로젝트랩',
-    'flutter'
-  ];
-  List<String> itemContents = [
-    '자료구조',
-    '확률과 통계',
-    'C언어',
-    'Python',
-    '기초프로젝트랩',
-    'flutter'
-  ];
-
-  void cardClickEvent(BuildContext context, int index) {
-    String content = itemContents[index];
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ContentPage(content: content)));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,49 +41,50 @@ class _SearchState extends State<Search> {
                 }),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: items.length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (searchText.isNotEmpty &&
-                      !items[index]
-                          .toLowerCase()
-                          .contains(searchText.toLowerCase())) {
-                    return SizedBox.shrink();
-                  } else {
-                    return Card(
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.all(Radius.elliptical(20, 20)),
-                      ),
-                      child: Center(
-                        child: ListTile(
-                          title: ElevatedButton(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection('Tag_info').snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                List<String> tagInfoList = [];
+                for (var doc in snapshot.data!.docs) {
+                  tagInfoList.add(doc.id);
+                }
+
+                List<String> matchedTags = tagInfoList.where((tag) => tag.contains(searchText)).take(9).toList();
+
+                return ListView.builder(
+                  itemCount: matchedTags.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {  },
+                      child: Container(
+                        margin: EdgeInsets.all(5),
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ButtonTheme(
+                          child: ElevatedButton(
                             onPressed: () {
-                              // 해당 태그로 모여있는 게시판으로
-                              // Navigator -> Tagged_HomePage
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => Tagged_Page(tag_info: matchedTags[index]))
+                              );
                             },
-                            child: Text(
-                              items[index],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
+                            child: Text(matchedTags[index]),
                           ),
                         ),
                       ),
                     );
-                  }
-                },
-              ),
+                  },
+                );
+              },
             ),
           ),
         ],
