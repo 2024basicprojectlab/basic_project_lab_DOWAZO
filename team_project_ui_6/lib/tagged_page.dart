@@ -2,16 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:team_project_ui_6/posting.dart';
 import 'package:team_project_ui_6/search.dart';
-import 'package:team_project_ui_6/tagged_page.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+
+class Tagged_Page extends StatefulWidget {
+  final String tag_info;
+  const Tagged_Page({super.key, required this.tag_info});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<Tagged_Page> createState() => _Tagged_PageState(tag_info: this.tag_info);
 }
 
-class _HomePageState extends State<HomePage> {
+class _Tagged_PageState extends State<Tagged_Page> {
+  final String tag_info;
+
+  _Tagged_PageState({required this.tag_info});
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +44,8 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 // Navigator -> Search
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Search())
+                    context,
+                    MaterialPageRoute(builder: (context) => Search())
                 );
                 print("Navigate Search\n");
               },
@@ -66,8 +70,20 @@ class _HomePageState extends State<HomePage> {
                       String title = document['title'];
                       List<String> tag_List = List.from(document['tags']);
 
-                      return ImageItem(imageUrl: imageUrl, title: title, tagList: tag_List);
+                      // tag_List에 tag_info가 포함되어 있는지 확인합니다.
+                      if(tag_List.contains(tag_info)) {
+                        // 포함되어 있다면 ImageItem 위젯을 반환합니다.
+                        return ImageItem(
+                          imageUrl: imageUrl,
+                          title: title,
+                          tagList: tag_List,
+                        );
+                      } else {
+                        // 포함되어 있지 않다면 빈 Container를 반환합니다.
+                        return Container();
+                      }
                     }).toList(),
+
                   ),
                 );
             }
@@ -77,10 +93,10 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(
-                context, 
+                context,
                 MaterialPageRoute(builder: (context) => Posting())
             );
-              // Navigate Posting
+            // Navigate Posting
           },
           child: Icon(Icons.add),
         ),
@@ -120,17 +136,17 @@ class ImageItem extends StatelessWidget {
             spacing: 5,
             runSpacing: 5,
             children: tagList.map((tag) => Chip(label:
-              ButtonTheme(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context, 
-                        MaterialPageRoute(builder: (context) => Tagged_Page(tag_info: tag))
-                    );
-                  },
-                  child: Text(tag),
-                ),
+            ButtonTheme(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Tagged_Page(tag_info: tag))
+                  );
+                },
+                child: Text(tag),
               ),
+            ),
             )).toList(),
           ),
         ],
@@ -138,3 +154,4 @@ class ImageItem extends StatelessWidget {
     );
   }
 }
+
