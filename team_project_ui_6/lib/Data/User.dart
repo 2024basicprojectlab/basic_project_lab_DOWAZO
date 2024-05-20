@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:team_project_ui_6/app.dart';
 
-class User {
+class User_data {
   String id;
   String pw;
 
-  User(this.id, this.pw);
+  User_data(this.id, this.pw);
 
-  User.clone(User user)
+  User_data.clone(User_data user)
     : this(user.id, user.pw);
 
   setId(String id){

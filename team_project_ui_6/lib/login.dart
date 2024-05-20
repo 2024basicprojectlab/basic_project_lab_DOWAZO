@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:team_project_ui_6/Data/User.dart';
@@ -6,7 +9,7 @@ import 'package:team_project_ui_6/register.dart';
 
 import 'home_page.dart';
 
-User? onUser;
+User_data? onUser;
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -19,9 +22,36 @@ class _LoginState extends State<Login> {
   TextEditingController controller_id = TextEditingController();
   TextEditingController controller_pw = TextEditingController();
 
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  void _login(BuildContext context) async {
+    try {
+      QuerySnapshot snapshot = await firestore.collection("User_info")
+          .where("id", isEqualTo: controller_id.text).limit(1).get();
+      print("AA");
+      if(snapshot.docs.isNotEmpty) {
+        DocumentSnapshot document = snapshot.docs.first;
+        String pw = document['pw'];
+
+        print(controller_id.text + ' --- ' + pw + '  ' + controller_pw.text + '\n');
+
+        if (pw == controller_pw.text) {
+          onUser = User_data(controller_id.text, controller_pw.text);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+          print("MOVING");
+        } else {showSnackBar(context);}
+      } else {showSnackBar(context);}
+    } on FirebaseAuthException catch (e) {print(e.toString());}
+    catch(e) {print(e.toString());}
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.deepOrange,
       body: Center(
         child: Builder(builder: (context) {
@@ -99,6 +129,8 @@ class _LoginState extends State<Login> {
                           ButtonTheme(
                             child: ElevatedButton(
                               onPressed: () {
+                                _login(context);
+                                /*
                                 users.forEach((user) {
                                   if(user.id == controller_id.text
                                       && user.pw == controller_pw.text) {
@@ -114,6 +146,7 @@ class _LoginState extends State<Login> {
                                     showSnackBar(context);
                                   }
                                 });
+                                 */
                               },
                               child: Text("로그인"),
                             ),

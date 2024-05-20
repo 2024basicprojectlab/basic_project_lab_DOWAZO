@@ -5,8 +5,6 @@ import 'package:team_project_ui_6/register.dart';
 import 'home_page.dart';
 import 'login.dart';
 
-List<User> users = [User("admin", "1234"), User("visitor", "1111")];
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:team_project_ui_6/posting.dart';
 import 'package:team_project_ui_6/search.dart';
@@ -57,47 +58,31 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: imageUrls.map((imageUrl) {
-              return Container(
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.symmetric(vertical: 5.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300, width: 1.0),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      height: 300.0,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(imageUrl),
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    SizedBox(height: 10.0,),
-                    Container(
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Text(
-                        '(게시 날짜)',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
-          ),
+        body: StreamBuilder<QuerySnapshot> (
+          stream: FirebaseFirestore.instance.collection('Text_info').snapshots(),
+          builder: (context, snapshot) {
+            if(snapshot.hasError) {
+              return Text('Error ${snapshot.error}');
+            }
+
+            switch(snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Center(child: CircularProgressIndicator());
+              default:
+                return SingleChildScrollView(
+                  child: Column(
+                    children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                      String imageUrl = document['image_url'];
+                      String title = document['title'];
+                      List<String> tag_List = List.from(document['tags']);
+
+                      return ImageItem(imageUrl: imageUrl, title: title, tagList: tag_List);
+                    }).toList(),
+                  ),
+                );
+            }
+          },
+
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -110,6 +95,43 @@ class _HomePageState extends State<HomePage> {
           child: Icon(Icons.add),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      ),
+    );
+  }
+}
+
+class ImageItem extends StatelessWidget {
+  final String imageUrl;
+  final String title;
+  final List<String> tagList;
+
+  ImageItem({required this.imageUrl, required this.title, required this.tagList});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(10),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 10,),
+          Image.network(imageUrl),
+          SizedBox(height: 10,),
+          Wrap(
+            spacing: 5,
+            runSpacing: 5,
+            children: tagList.map((tag) => Chip(label: Text(tag))).toList(),
+          ),
+        ],
       ),
     );
   }
