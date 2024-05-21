@@ -31,7 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       QuerySnapshot snapshot = await firestore.collection("User_info")
           .where("id", isEqualTo: _IDController.text).limit(1).get();
-      print("AA");
       if(snapshot.docs.isNotEmpty) {
         DocumentSnapshot document = snapshot.docs.first;
         String pw = document['pw'];

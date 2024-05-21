@@ -37,7 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
           showSnackBar(context);
         } else {
           firestore.collection('User_info').doc(_IDController.text).set(
-              {'id': _IDController.text, 'pw': _PWController.text});
+              {'id': _IDController.text, 'pw': _PWController.text, 'post_num': 0, 'comment_num': 0});
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LoginScreen()),

@@ -4,6 +4,8 @@ import 'package:team_project_ui_6/UI/posting.dart';
 import 'package:team_project_ui_6/UI/serch_ui.dart';
 import 'package:team_project_ui_6/Colors.dart';
 
+import 'main_page_ui.dart';
+
 
 class Tagged_Page extends StatefulWidget {
   final String tag_info;
@@ -25,7 +27,19 @@ class _Tagged_PageState extends State<Tagged_Page> {
         backgroundColor: mobileBackgroundColor,
         appBar: AppBar(
           backgroundColor: mobileBackgroundColor,
-          title: const Text("DOWAZO"),
+          title: TextButton(
+            child: const Text(
+              "DOWAZO",
+              style: TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FeedScreen()),
+              );
+            },
+          ),
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.account_circle),

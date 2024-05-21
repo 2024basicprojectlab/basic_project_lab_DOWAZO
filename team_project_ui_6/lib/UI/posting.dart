@@ -102,6 +102,13 @@ class _PostingState extends State<Posting> {
         firestore.collection('Text_info').doc(text_name).set(
             {'text_id': text_name, 'title':_titlecontroller.text, 'tags':_tagList, 'image_url': _url});
 
+        QuerySnapshot snapshot = await firestore.collection('User_info')
+            .where("id", isEqualTo: onUser?.id).limit(1).get();
+        int post_cnt = snapshot.docs.first['post_num'];
+        firestore.collection('User_info').doc(onUser?.id).update({
+          'post_num': post_cnt+1,
+        });
+
         for(String tag in _tagList) {
           // 'Tag_info' 컬렉션에서 해당 태그가 있는지 확인
           DocumentSnapshot tagSnapshot = await firestore.collection('Tag_info').doc(tag).get();
