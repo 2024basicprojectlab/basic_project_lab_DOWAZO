@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:team_project_ui_6/UI/posting.dart';
 import 'package:team_project_ui_6/UI/posting_comment.dart';
-import 'package:team_project_ui_6/UI/serch_ui.dart';
+import 'package:team_project_ui_6/UI/search_ui.dart';
 import 'package:team_project_ui_6/Colors.dart';
 import 'package:team_project_ui_6/UI/tagged_post_page_ui.dart';
 

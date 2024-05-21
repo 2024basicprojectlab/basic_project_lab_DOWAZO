@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:team_project_ui_6/UI/serch_ui.dart';
+import 'package:team_project_ui_6/UI/post_page_ui.dart';
+import 'package:team_project_ui_6/UI/search_ui.dart';
 import 'package:team_project_ui_6/UI/main_page_ui.dart';
 import 'package:team_project_ui_6/Colors.dart';
 import 'package:team_project_ui_6/Utils.dart';
@@ -157,9 +158,17 @@ class _My_PageState extends State<My_Page> {
                                     (snapshot.data! as dynamic).docs[index];
 
                                 return SizedBox(
-                                  child: Image(
-                                    image: NetworkImage(snap['image_url']),
-                                    fit: BoxFit.cover,
+                                  child: GestureDetector(
+                                    child: Image(
+                                      image: NetworkImage(snap['image_url']),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context, 
+                                          MaterialPageRoute(builder: (context) => Post_Page(text_id: snap['text_id']))
+                                      );
+                                    },
                                   ),
                                 );
                               },

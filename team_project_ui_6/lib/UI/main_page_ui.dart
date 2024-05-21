@@ -5,7 +5,7 @@ import 'package:team_project_ui_6/Colors.dart';
 import 'package:team_project_ui_6/ImageList.dart';
 import 'package:team_project_ui_6/UI/login_ui.dart';
 import 'package:team_project_ui_6/UI/post_page_ui.dart';
-import 'package:team_project_ui_6/UI/serch_ui.dart';
+import 'package:team_project_ui_6/UI/search_ui.dart';
 import 'package:team_project_ui_6/UI/posting.dart';
 import 'package:team_project_ui_6/UI/tagged_page.dart';
 import 'package:team_project_ui_6/UI/my_page.dart';

@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:team_project_ui_6/UI/post_page_ui.dart';
 import 'package:team_project_ui_6/UI/posting.dart';
-import 'package:team_project_ui_6/UI/serch_ui.dart';
+import 'package:team_project_ui_6/UI/search_ui.dart';
 import 'package:team_project_ui_6/Colors.dart';
 
 import 'main_page_ui.dart';
+import 'my_page.dart';
 
 
 class Tagged_Post_Page extends StatefulWidget {
@@ -48,12 +49,10 @@ class _Tagged_Post_PageState extends State<Tagged_Post_Page> {
             icon: Icon(Icons.account_circle),
             onPressed: () {
               // Navigator -> My_Page
-              /*
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => My_Page())
               );
-               */
               print("Navigate My_page\n");
             },
           ),
