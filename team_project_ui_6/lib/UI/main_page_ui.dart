@@ -104,7 +104,7 @@ class _FeedScreenState extends State<FeedScreen> {
           Icons.add,
           color: Colors.white,
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.deepPurple,
       ),
       floatingActionButtonLocation:
       FloatingActionButtonLocation.endFloat, // 우측 하단에 위치하도록 설정
