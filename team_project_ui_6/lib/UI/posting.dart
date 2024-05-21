@@ -100,7 +100,7 @@ class _PostingState extends State<Posting> {
         String _url = await _ref.getDownloadURL();
 
         firestore.collection('Text_info').doc(text_name).set(
-            {'text_id': text_name, 'title':_titlecontroller.text, 'tags':_tagList, 'image_url': _url});
+            {'text_id': text_name, 'title':_titlecontroller.text, 'tags':_tagList, 'image_url': _url, 'user_id': onUser?.id});
 
         QuerySnapshot snapshot = await firestore.collection('User_info')
             .where("id", isEqualTo: onUser?.id).limit(1).get();
