@@ -35,8 +35,6 @@ class _SearchState extends State<Search> {
           style: TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
         ),
-        // actions: [
-        // ],
       ),
       body: Column(
         children: <Widget>[
@@ -79,30 +77,45 @@ class _SearchState extends State<Search> {
 
                 List<String> matchedTags = tagInfoList.where((tag) => tag.contains(searchText)).take(9).toList();
 
-                return ListView.builder(
-                  itemCount: matchedTags.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {  },
-                      child: Container(
-                        margin: EdgeInsets.all(5),
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.blue),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ButtonTheme(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => Tagged_Page(tag_info: matchedTags[index]))
-                              );
-                            },
-                            child: Text(matchedTags[index]),
-                          ),
-                        ),
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    double width = constraints.maxWidth;
+                    int crossAxisCount = (width / 300).round(); // 각 열의 최소 너비를 300으로 설정
+
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        mainAxisSpacing: 2, // 각 행 사이의 간격
+                        crossAxisSpacing: 2, // 각 열 사이의 간격
+                        childAspectRatio: 3, // 버튼의 가로 세로 비율을 설정
                       ),
+                      itemCount: matchedTags.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {  },
+                          child: Container(
+                            margin: EdgeInsets.all(5),
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                                minimumSize: Size(100, 40), // 버튼의 최소 크기를 설정
+                                textStyle: TextStyle(fontSize: 18), // 텍스트 스타일 설정
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => Tagged_Page(tag_info: matchedTags[index])),
+                                );
+                              },
+                              child: Text(matchedTags[index]),
+                            ),
+                          ),
+                        );
+                      },
                     );
                   },
                 );

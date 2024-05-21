@@ -25,13 +25,16 @@ class _FeedScreenState extends State<FeedScreen> {
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
         leading: IconButton(
-          icon: Icon(Icons.account_circle),
+          icon: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10), // 아이콘에 동일한 마진 추가
+            child: Icon(Icons.account_circle),
+          ),
+          iconSize: 28,
           onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => My_Page())
-              );
-
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => My_Page()),
+            );
             print("Navigate My_page\n");
           },
         ),
@@ -51,7 +54,11 @@ class _FeedScreenState extends State<FeedScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10), // 아이콘에 동일한 마진 추가
+              child: Icon(Icons.search),
+            ),
+            iconSize: 28,
             onPressed: () {
               // Navigator -> Search
               Navigator.push(
@@ -100,7 +107,7 @@ class _FeedScreenState extends State<FeedScreen> {
         backgroundColor: Colors.black,
       ),
       floatingActionButtonLocation:
-          FloatingActionButtonLocation.endFloat, // 우측 하단에 위치하도록 설정
+      FloatingActionButtonLocation.endFloat, // 우측 하단에 위치하도록 설정
     );
   }
 }
@@ -117,7 +124,7 @@ class ImageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // 양옆 여백 추가
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey),
@@ -132,13 +139,13 @@ class ImageItem extends StatelessWidget {
           ),
           SizedBox(height: 10,),
           GestureDetector(
-              child: Image.network(imageUrl),
+            child: Image.network(imageUrl),
             onTap: () {
-                //    게시글 댓글로 넘어갑니다.
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Post_Page(text_id: text_id)),
-                );
+              //    게시글 댓글로 넘어갑니다.
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Post_Page(text_id: text_id)),
+              );
             },
           ),
           SizedBox(height: 10,),
