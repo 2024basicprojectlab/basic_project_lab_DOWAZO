@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:team_project_ui_6/Colors.dart';
 import 'package:team_project_ui_6/ImageList.dart';
+import 'package:team_project_ui_6/UI/login_ui.dart';
 import 'package:team_project_ui_6/UI/serch_ui.dart';
 import 'package:team_project_ui_6/UI/posting.dart';
 import 'package:team_project_ui_6/UI/tagged_page.dart';
+import 'package:team_project_ui_6/UI/my_page.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
@@ -23,21 +26,27 @@ class _FeedScreenState extends State<FeedScreen> {
         leading: IconButton(
           icon: Icon(Icons.account_circle),
           onPressed: () {
-            // Navigator -> My_Page
-            /*
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => My_Page())
               );
-               */
+
             print("Navigate My_page\n");
           },
         ),
         centerTitle: true,
-        title: const Text(
-          "DOWAZO",
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
+        title: TextButton(
+          child: const Text(
+            "DOWAZO",
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FeedScreen()),
+            );
+          },
         ),
         actions: [
           IconButton(
@@ -119,7 +128,17 @@ class ImageItem extends StatelessWidget {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10,),
-          Image.network(imageUrl),
+          GestureDetector(
+              child: Image.network(imageUrl),
+            onTap: () {
+                /*    게시글 댓글로 넘어갑니다.
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+                 */
+            },
+          ),
           SizedBox(height: 10,),
           Wrap(
             spacing: 5,

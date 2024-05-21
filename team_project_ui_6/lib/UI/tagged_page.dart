@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:team_project_ui_6/UI/posting.dart';
 import 'package:team_project_ui_6/UI/serch_ui.dart';
+import 'package:team_project_ui_6/Colors.dart';
 
 
 class Tagged_Page extends StatefulWidget {
@@ -21,8 +22,9 @@ class _Tagged_PageState extends State<Tagged_Page> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: mobileBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          backgroundColor: mobileBackgroundColor,
           title: const Text("DOWAZO"),
           centerTitle: true,
           leading: IconButton(
