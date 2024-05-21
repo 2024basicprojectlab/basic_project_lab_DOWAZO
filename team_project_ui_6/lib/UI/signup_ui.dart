@@ -21,31 +21,41 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _IDController = TextEditingController();
   final TextEditingController _PWController = TextEditingController();
   final TextEditingController _PW2Controller = TextEditingController();
-  Uint8List? _image;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   void _register(BuildContext context) async {
     try {
-      if(_IDController.text == "") {
+      if (_IDController.text == "") {
         showSnackBar(context);
       } else {
-        QuerySnapshot snapshot = await firestore.collection("User_info")
-            .where("id", isEqualTo: _IDController.text).limit(1).get();
+        QuerySnapshot snapshot = await firestore
+            .collection("User_info")
+            .where("id", isEqualTo: _IDController.text)
+            .limit(1)
+            .get();
 
-        if (snapshot.docs.isNotEmpty || _PWController.text != _PW2Controller.text) {
+        if (snapshot.docs.isNotEmpty ||
+            _PWController.text != _PW2Controller.text) {
           showSnackBar(context);
         } else {
-          firestore.collection('User_info').doc(_IDController.text).set(
-              {'id': _IDController.text, 'pw': _PWController.text, 'post_num': 0, 'comment_num': 0});
+          firestore.collection('User_info').doc(_IDController.text).set({
+            'id': _IDController.text,
+            'pw': _PWController.text,
+            'post_num': 0,
+            'comment_num': 0
+          });
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LoginScreen()),
           );
         }
       }
-    } on FirebaseAuthException catch (e) {print(e.toString());}
-    catch(e) {print(e.toString());}
+    } on FirebaseAuthException catch (e) {
+      print(e.toString());
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
@@ -54,14 +64,6 @@ class _SignupScreenState extends State<SignupScreen> {
     _IDController.dispose();
     _PWController.dispose();
     _PW2Controller.dispose();
-  }
-
-  selectImage() async {
-    Uint8List im = await pickImage(ImageSource.gallery);
-    // set state because we need to display the image we selected on the circle avatar
-    setState(() {
-      _image = im;
-    });
   }
 
   @override
@@ -82,29 +84,14 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(
                 height: 64,
               ),
-              Stack(
-                children: [
-                  _image != null
-                      ? CircleAvatar(
-                    radius: 64,
-                    backgroundImage: MemoryImage(_image!),
-                    backgroundColor: Colors.white,
-                  )
-                      : const CircleAvatar(
-                    radius: 64,
-                    backgroundImage: NetworkImage(
-                        'https://i.stack.imgur.com/l60Hf.png'),
-                    backgroundColor: Colors.white,
-                  ),
-                  Positioned(
-                    bottom: -10,
-                    left: 80,
-                    child: IconButton(
-                      onPressed: selectImage,
-                      icon: const Icon(Icons.add_a_photo),
-                    ),
-                  )
-                ],
+              CircleAvatar(
+                backgroundColor: Colors.black,
+                child: Icon(
+                  Icons.account_circle,
+                  size: 80,
+                  color: Colors.white,
+                ),
+                radius: 40,
               ),
               const SizedBox(
                 height: 24,
