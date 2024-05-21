@@ -8,6 +8,7 @@ import 'package:team_project_ui_6/UI/main_page_ui.dart';
 import 'package:team_project_ui_6/Utils.dart';
 import 'package:team_project_ui_6/UI/login_ui.dart';
 import 'dart:typed_data';
+import 'package:team_project_ui_6/Colors.dart';
 
 class Posting extends StatefulWidget {
   const Posting({super.key});
@@ -36,9 +37,55 @@ class _PostingState extends State<Posting> {
     }
   }
 
+  _selectImage(BuildContext parentContext) async {
+    return showDialog(
+      context: parentContext,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: const Text(
+            '이미지 올리기',
+            textAlign: TextAlign.center,
+          ),
+          children: <Widget>[
+            SimpleDialogOption(
+                padding: const EdgeInsets.all(20),
+                child: const Text(
+                  '카메라',
+                  textAlign: TextAlign.center,
+                ),
+                onPressed: () async {
+                  getImage(ImageSource.camera);
+                }),
+            SimpleDialogOption(
+                padding: const EdgeInsets.all(20),
+                child: const Text(
+                  '갤러리',
+                  textAlign: TextAlign.center,
+                ),
+                onPressed: () async {
+                  getImage(ImageSource.gallery);
+                }),
+            SimpleDialogOption(
+              padding: const EdgeInsets.all(20),
+              child: const Text(
+                "취소",
+                textAlign: TextAlign.center,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
   void post(BuildContext context) async {
     try {
-      if(_titlecontroller.text == "" || _tagList.length == 0 || _image == null) {
+      if (_titlecontroller.text == "" ||
+          _tagList.length == 0 ||
+          _image == null) {
         showSnackBar(context);
       } else {
         var countQuerySnapshot = await firestore.collection('Text_info').get();
@@ -72,37 +119,112 @@ class _PostingState extends State<Posting> {
         );
       }
     } on FirebaseAuthException catch(e) {print(e.toString());}
-    catch(e) {print(e.toString());}
+  catch(e) {print(e.toString());}
   }
+
+  // void clearImage() {
+  //   setState(() {
+  //     _image = null;
+  //   });
+  // }
 
   Widget _buildPhotoArea() {
     return _image != null
         ? Container(
-      width: 300, height: 300,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: FileImage(File(_image!.path)),
-        ),
-      ),
-      //child: Image.file(File(_image!.path)),
-    )
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: FileImage(File(_image!.path)),
+              ),
+            ),
+            //child: Image.file(File(_image!.path)),
+          )
         : Container(
-      width: 300, height: 300,
-      color: Colors.grey,
-    );
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.grey,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    _selectImage(context);
+                  },
+                  icon: Icon(
+                    Icons.add_a_photo,
+                    size: MediaQuery.of(context).size.width * 0.1,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: mobileBackgroundColor,
+        shape: Border(bottom: BorderSide(color: Colors.white, width: 1)),
+        // 있는게 더 괜찮나..?
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FeedScreen()),
+            );
+          },
+        ),
+        centerTitle: true,
+        title: const Text(
+          "DOWAZO",
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                // 작성된 글을 올리기
+                post(context),
+            child: const Text(
+              "Post",
+              style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0),
+            ),
+          )
+        ],
+      ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('제목'), // 글 제목을 입력하는 텍스트 위젯입니다.
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '제목',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
               TextField(
                 controller: _titlecontroller,
                 decoration: InputDecoration(
@@ -110,7 +232,21 @@ class _PostingState extends State<Posting> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              Text('태그'), // 글에 부여할 태그를 입력하는 텍스트 위젯입니다.
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '태그',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
               Row(
                 children: [
                   Expanded(
@@ -121,7 +257,7 @@ class _PostingState extends State<Posting> {
                         border: OutlineInputBorder(),
                       ),
                     ),
-                    flex: 3,
+                    flex: 9,
                   ),
                   Expanded(
                     child: IconButton(
@@ -135,7 +271,7 @@ class _PostingState extends State<Posting> {
                         }
                       },
                       icon: Icon(
-                        Icons.send,
+                        Icons.add,
                       ),
                     ),
                     flex: 1,
@@ -143,7 +279,7 @@ class _PostingState extends State<Posting> {
                 ],
               ),
               SizedBox(
-                height: 30,
+                height: 10,
               ),
               Row(
                 children: _tagList
@@ -179,75 +315,11 @@ class _PostingState extends State<Posting> {
               SizedBox(
                 height: 30,
               ),
-              Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.lightBlueAccent,
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 0.5,
-                          blurRadius: 5,
-                        )
-                      ],
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        getImage(ImageSource.camera);
-                      }, // 카메라에서 이미지 한장 선택
-                      icon: Icon(
-                        Icons.add_a_photo,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.lightBlueAccent,
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 0.5,
-                          blurRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        getImage(ImageSource.gallery);
-                      }, // 갤러리에서 이미지 한장 선택
-                      icon: Icon(
-                        Icons.add_photo_alternate_outlined,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
               _buildPhotoArea(),
-              IconButton(
-                onPressed: () {
-                  // 작성된 글을 올리기
-                  post(context);
-                },
-                icon: Icon(
-                  Icons.send,
-                ),
-              ),
             ],
           ),
         ),
       ),
     );
   }
-
 }

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:team_project_ui_6/UI/tagged_page.dart';
 import 'package:team_project_ui_6/week_1/page5.dart';
+import 'package:team_project_ui_6/Colors.dart';
+import 'package:team_project_ui_6/UI/main_page_ui.dart';
 
 class Search extends StatefulWidget {
   const Search({super.key});
@@ -16,6 +18,26 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: mobileBackgroundColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FeedScreen()),
+            );
+          },
+        ),
+        centerTitle: true,
+        title: const Text(
+          "DOWAZO",
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 32),
+        ),
+        // actions: [
+        // ],
+      ),
       body: Column(
         children: <Widget>[
           Padding(
