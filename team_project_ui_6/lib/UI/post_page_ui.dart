@@ -1,25 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:team_project_ui_6/UI/post_page_ui.dart';
 import 'package:team_project_ui_6/UI/posting.dart';
+import 'package:team_project_ui_6/UI/posting_comment.dart';
 import 'package:team_project_ui_6/UI/serch_ui.dart';
 import 'package:team_project_ui_6/Colors.dart';
+import 'package:team_project_ui_6/UI/tagged_post_page_ui.dart';
 
 import 'main_page_ui.dart';
+import 'my_page.dart';
 
 
-class Tagged_Page extends StatefulWidget {
-  final String tag_info;
-  const Tagged_Page({super.key, required this.tag_info});
+class Post_Page extends StatefulWidget {
+  final String text_id;
+  const Post_Page({super.key, required this.text_id});
 
   @override
-  State<Tagged_Page> createState() => _Tagged_PageState(tag_info: this.tag_info);
+  State<Post_Page> createState() => _Post_PageState(text_id: this.text_id);
 }
 
-class _Tagged_PageState extends State<Tagged_Page> {
-  final String tag_info;
+class _Post_PageState extends State<Post_Page> {
+  final String text_id;
 
-  _Tagged_PageState({required this.tag_info});
+  _Post_PageState({required this.text_id});
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +48,10 @@ class _Tagged_PageState extends State<Tagged_Page> {
             icon: Icon(Icons.account_circle),
             onPressed: () {
               // Navigator -> My_Page
-              /*
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => My_Page())
               );
-               */
               print("Navigate My_page\n");
             },
           ),
@@ -70,7 +70,7 @@ class _Tagged_PageState extends State<Tagged_Page> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot> (
-          stream: FirebaseFirestore.instance.collection('Text_info').snapshots(),
+          stream: FirebaseFirestore.instance.collection(text_id).snapshots(),
           builder: (context, snapshot) {
             if(snapshot.hasError) {
               return Text('Error ${snapshot.error}');
@@ -85,22 +85,10 @@ class _Tagged_PageState extends State<Tagged_Page> {
                     children: snapshot.data!.docs.map((DocumentSnapshot document) {
                       String imageUrl = document['image_url'];
                       String title = document['title'];
-                      String text_id = document['text_id'];
                       List<String> tag_List = List.from(document['tags']);
 
                       // tag_List에 tag_info가 포함되어 있는지 확인합니다.
-                      if(tag_List.contains(tag_info)) {
-                        // 포함되어 있다면 ImageItem 위젯을 반환합니다.
-                        return ImageItem(
-                          imageUrl: imageUrl,
-                          title: title,
-                          tagList: tag_List,
-                          text_id: text_id,
-                        );
-                      } else {
-                        // 포함되어 있지 않다면 빈 Container를 반환합니다.
-                        return Container();
-                      }
+                      return ImageItem(imageUrl: imageUrl, title: title, tagList: tag_List, text_id: text_id,);
                     }).toList(),
 
                   ),
@@ -113,7 +101,7 @@ class _Tagged_PageState extends State<Tagged_Page> {
           onPressed: () {
             Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Posting())
+                MaterialPageRoute(builder: (context) => Posting_Comment(text_id: text_id))
             );
             // Navigate Posting
           },
@@ -124,6 +112,7 @@ class _Tagged_PageState extends State<Tagged_Page> {
     );
   }
 }
+
 
 class ImageItem extends StatelessWidget {
   final String imageUrl;
@@ -150,16 +139,7 @@ class ImageItem extends StatelessWidget {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 10,),
-          GestureDetector(
-            child: Image.network(imageUrl),
-            onTap: () {
-              //    게시글 댓글로 넘어갑니다.
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Post_Page(text_id: text_id)),
-              );
-            },
-          ),
+          Image.network(imageUrl),
           SizedBox(height: 10,),
           Wrap(
             spacing: 5,
@@ -170,7 +150,7 @@ class ImageItem extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Tagged_Page(tag_info: tag))
+                      MaterialPageRoute(builder: (context) => Tagged_Post_Page(tag_info: tag, text_id: text_id))
                   );
                 },
                 child: Text(tag),

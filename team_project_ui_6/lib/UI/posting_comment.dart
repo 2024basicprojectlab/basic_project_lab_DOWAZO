@@ -5,19 +5,24 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:team_project_ui_6/UI/main_page_ui.dart';
+import 'package:team_project_ui_6/UI/post_page_ui.dart';
 import 'package:team_project_ui_6/Utils.dart';
 import 'package:team_project_ui_6/UI/login_ui.dart';
 import 'dart:typed_data';
 import 'package:team_project_ui_6/Colors.dart';
 
-class Posting extends StatefulWidget {
-  const Posting({super.key});
+class Posting_Comment extends StatefulWidget {
+  final String text_id;
+  const Posting_Comment({super.key, required this.text_id});
 
   @override
-  State<Posting> createState() => _PostingState();
+  State<Posting_Comment> createState() => _Posting_CommentState(text_id: text_id);
 }
 
-class _PostingState extends State<Posting> {
+class _Posting_CommentState extends State<Posting_Comment> {
+  final String text_id;
+  _Posting_CommentState({required this.text_id});
+
   TextEditingController _titlecontroller = TextEditingController();
   TextEditingController _tagcontroller = TextEditingController();
   List<String> _tagList = [];
@@ -88,7 +93,7 @@ class _PostingState extends State<Posting> {
           _image == null) {
         showSnackBar(context);
       } else {
-        var countQuerySnapshot = await firestore.collection('Text_info').get();
+        var countQuerySnapshot = await firestore.collection(text_id).get();
         int num = countQuerySnapshot.docs.length;
         String text_name = "${onUser!.id}_$num";
 
@@ -99,14 +104,14 @@ class _PostingState extends State<Posting> {
         Reference _ref = firebaseStorage.ref('image_data/${text_name}');
         String _url = await _ref.getDownloadURL();
 
-        firestore.collection('Text_info').doc(text_name).set(
+        firestore.collection(text_id).doc(text_name).set(
             {'text_id': text_name, 'title':_titlecontroller.text, 'tags':_tagList, 'image_url': _url});
 
         QuerySnapshot snapshot = await firestore.collection('User_info')
             .where("id", isEqualTo: onUser?.id).limit(1).get();
-        int post_cnt = snapshot.docs.first['post_num'];
+        int post_cnt = snapshot.docs.first['comment_num'];
         firestore.collection('User_info').doc(onUser?.id).update({
-          'post_num': post_cnt+1,
+          'comment_num': post_cnt+1,
         });
 
         for(String tag in _tagList) {
@@ -122,11 +127,11 @@ class _PostingState extends State<Posting> {
 
         Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => FeedScreen())
+            MaterialPageRoute(builder: (context) => Post_Page(text_id: text_id))
         );
       }
     } on FirebaseAuthException catch(e) {print(e.toString());}
-  catch(e) {print(e.toString());}
+    catch(e) {print(e.toString());}
   }
 
   // void clearImage() {
@@ -138,36 +143,36 @@ class _PostingState extends State<Posting> {
   Widget _buildPhotoArea() {
     return _image != null
         ? Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: FileImage(File(_image!.path)),
-              ),
-            ),
-            //child: Image.file(File(_image!.path)),
-          )
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: FileImage(File(_image!.path)),
+        ),
+      ),
+      //child: Image.file(File(_image!.path)),
+    )
         : Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.grey,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    _selectImage(context);
-                  },
-                  icon: Icon(
-                    Icons.add_a_photo,
-                    size: MediaQuery.of(context).size.width * 0.1,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      color: Colors.grey,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            onPressed: () {
+              _selectImage(context);
+            },
+            icon: Icon(
+              Icons.add_a_photo,
+              size: MediaQuery.of(context).size.width * 0.1,
+              color: Colors.black,
             ),
-          );
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -203,8 +208,8 @@ class _PostingState extends State<Posting> {
         actions: [
           TextButton(
             onPressed: () =>
-                // 작성된 글을 올리기
-                post(context),
+            // 작성된 글을 올리기
+            post(context),
             child: const Text(
               "Post",
               style: TextStyle(
@@ -300,31 +305,31 @@ class _PostingState extends State<Posting> {
                 children: _tagList
                     .map(
                       (text) => Stack(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.blue),
-                            ),
-                            child: Text(text),
-                          ),
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child: IconButton(
-                              icon: Icon(Icons.clear),
-                              onPressed: () {
-                                setState(() {
-                                  _tagList.remove(text);
-                                });
-                              },
-                            ),
-                          ),
-                        ],
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        margin: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.blue),
+                        ),
+                        child: Text(text),
                       ),
-                    )
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: IconButton(
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            setState(() {
+                              _tagList.remove(text);
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                )
                     .toList(),
               ),
               SizedBox(

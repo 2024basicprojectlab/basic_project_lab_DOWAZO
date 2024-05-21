@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:team_project_ui_6/Colors.dart';
 import 'package:team_project_ui_6/ImageList.dart';
 import 'package:team_project_ui_6/UI/login_ui.dart';
+import 'package:team_project_ui_6/UI/post_page_ui.dart';
 import 'package:team_project_ui_6/UI/serch_ui.dart';
 import 'package:team_project_ui_6/UI/posting.dart';
 import 'package:team_project_ui_6/UI/tagged_page.dart';
@@ -77,8 +78,9 @@ class _FeedScreenState extends State<FeedScreen> {
                     String imageUrl = document['image_url'];
                     String title = document['title'];
                     List<String> tag_List = List.from(document['tags']);
+                    String text_id = document['text_id'];
 
-                    return ImageItem(imageUrl: imageUrl, title: title, tagList: tag_List);
+                    return ImageItem(imageUrl: imageUrl, title: title, tagList: tag_List, text_id: text_id);
                   }).toList(),
                 ),
               );
@@ -107,9 +109,10 @@ class _FeedScreenState extends State<FeedScreen> {
 class ImageItem extends StatelessWidget {
   final String imageUrl;
   final String title;
+  final String text_id;
   final List<String> tagList;
 
-  ImageItem({required this.imageUrl, required this.title, required this.tagList});
+  ImageItem({required this.imageUrl, required this.title, required this.tagList, required this.text_id});
 
   @override
   Widget build(BuildContext context) {
@@ -131,12 +134,11 @@ class ImageItem extends StatelessWidget {
           GestureDetector(
               child: Image.network(imageUrl),
             onTap: () {
-                /*    게시글 댓글로 넘어갑니다.
+                //    게시글 댓글로 넘어갑니다.
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    MaterialPageRoute(builder: (context) => Post_Page(text_id: text_id)),
                 );
-                 */
             },
           ),
           SizedBox(height: 10,),
