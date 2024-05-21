@@ -130,6 +130,7 @@ class _My_PageState extends State<My_Page> {
                       // 나중에 stream 로그인된 계정이 쓴 글로 되게 해야함.
                       stream: FirebaseFirestore.instance
                           .collection('Text_info')
+                          .where("user_id" ,isEqualTo: onUser?.id)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
