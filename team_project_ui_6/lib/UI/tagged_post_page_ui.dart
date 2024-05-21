@@ -8,18 +8,20 @@ import 'package:team_project_ui_6/Colors.dart';
 import 'main_page_ui.dart';
 
 
-class Tagged_Page extends StatefulWidget {
+class Tagged_Post_Page extends StatefulWidget {
   final String tag_info;
-  const Tagged_Page({super.key, required this.tag_info});
+  final String text_id;
+  const Tagged_Post_Page({super.key, required this.tag_info, required this.text_id});
 
   @override
-  State<Tagged_Page> createState() => _Tagged_PageState(tag_info: this.tag_info);
+  State<Tagged_Post_Page> createState() => _Tagged_Post_PageState(tag_info: this.tag_info, text_id: this.text_id);
 }
 
-class _Tagged_PageState extends State<Tagged_Page> {
+class _Tagged_Post_PageState extends State<Tagged_Post_Page> {
   final String tag_info;
+  final String text_id;
 
-  _Tagged_PageState({required this.tag_info});
+  _Tagged_Post_PageState({required this.tag_info, required this.text_id});
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +72,7 @@ class _Tagged_PageState extends State<Tagged_Page> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot> (
-          stream: FirebaseFirestore.instance.collection('Text_info').snapshots(),
+          stream: FirebaseFirestore.instance.collection(text_id).snapshots(),
           builder: (context, snapshot) {
             if(snapshot.hasError) {
               return Text('Error ${snapshot.error}');
@@ -170,7 +172,7 @@ class ImageItem extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Tagged_Page(tag_info: tag))
+                      MaterialPageRoute(builder: (context) => Tagged_Post_Page(tag_info: tag, text_id: text_id,))
                   );
                 },
                 child: Text(tag),
