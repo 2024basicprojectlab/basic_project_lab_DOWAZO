@@ -10,6 +10,7 @@ import 'package:team_project_ui_6/Utils.dart';
 import 'package:team_project_ui_6/UI/login_ui.dart';
 import 'dart:typed_data';
 import 'package:team_project_ui_6/Colors.dart';
+import 'package:intl/intl.dart';
 
 class Posting_Comment extends StatefulWidget {
   final String text_id;
@@ -94,8 +95,11 @@ class _Posting_CommentState extends State<Posting_Comment> {
         showSnackBar(context);
       } else {
         var countQuerySnapshot = await firestore.collection(text_id).get();
-        int num = countQuerySnapshot.docs.length;
-        String text_name = "${onUser!.id}_$num";
+        //int num = countQuerySnapshot.docs.length;
+        final now = DateTime.timestamp();
+        String stringDate = DateFormat("yyyyMMddhhmmss").format(now);
+        print("test중입니다" + stringDate);
+        String text_name = "${stringDate}_${onUser!.id}";
 
         Uint8List imageData = await _image!.readAsBytes();
         await firebaseStorage.ref('image_data/${text_name}').putData(
