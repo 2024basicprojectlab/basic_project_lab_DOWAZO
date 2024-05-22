@@ -70,7 +70,7 @@ class _Post_PageState extends State<Post_Page> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot> (
-          stream: FirebaseFirestore.instance.collection(text_id).snapshots(),
+          stream: FirebaseFirestore.instance.collection(text_id).orderBy("text_id", descending: true).snapshots(),
           builder: (context, snapshot) {
             if(snapshot.hasError) {
               return Text('Error ${snapshot.error}');
