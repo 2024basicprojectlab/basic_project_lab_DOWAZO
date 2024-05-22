@@ -9,6 +9,7 @@ import 'package:team_project_ui_6/Utils.dart';
 import 'package:team_project_ui_6/UI/login_ui.dart';
 import 'dart:typed_data';
 import 'package:team_project_ui_6/Colors.dart';
+import 'package:intl/intl.dart';
 
 class Posting extends StatefulWidget {
   const Posting({super.key});
@@ -89,8 +90,11 @@ class _PostingState extends State<Posting> {
         showSnackBar(context);
       } else {
         var countQuerySnapshot = await firestore.collection('Text_info').get();
-        int num = countQuerySnapshot.docs.length;
-        String text_name = "${onUser!.id}_$num";
+        //int num = countQuerySnapshot.docs.length;
+        final now = DateTime.timestamp();
+        String stringDate = DateFormat("yyyyMMddhhmmss").format(now);
+        print("test중입니다" + stringDate);
+        String text_name = "${stringDate}_${onUser!.id}";
 
         Uint8List imageData = await _image!.readAsBytes();
         await firebaseStorage.ref('image_data/${text_name}').putData(
@@ -100,7 +104,9 @@ class _PostingState extends State<Posting> {
         String _url = await _ref.getDownloadURL();
 
         firestore.collection('Text_info').doc(text_name).set(
-            {'text_id': text_name, 'title':_titlecontroller.text, 'tags':_tagList, 'image_url': _url, 'user_id': onUser?.id});
+            {'text_id': text_name, 'title':_titlecontroller.text,
+              'tags':_tagList, 'image_url': _url, 'user_id': onUser?.id, 'data': stringDate});
+
 
         QuerySnapshot snapshot = await firestore.collection('User_info')
             .where("id", isEqualTo: onUser?.id).limit(1).get();
