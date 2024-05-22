@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:team_project_ui_6/UI/comment.dart';
 import 'package:team_project_ui_6/UI/post_page_ui.dart';
 import 'package:team_project_ui_6/UI/posting.dart';
 import 'package:team_project_ui_6/UI/search_ui.dart';
@@ -156,7 +157,7 @@ class ImageItem extends StatelessWidget {
               //    게시글 댓글로 넘어갑니다.
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Post_Page(text_id: text_id)),
+                MaterialPageRoute(builder: (context) => Comment_Page(text_id: text_id)),
               );
             },
           ),

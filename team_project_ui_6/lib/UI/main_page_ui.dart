@@ -10,6 +10,8 @@ import 'package:team_project_ui_6/UI/posting.dart';
 import 'package:team_project_ui_6/UI/tagged_page.dart';
 import 'package:team_project_ui_6/UI/my_page.dart';
 
+import 'comment.dart';
+
 class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
 
@@ -144,7 +146,7 @@ class ImageItem extends StatelessWidget {
               //    게시글 댓글로 넘어갑니다.
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Post_Page(text_id: text_id)),
+                MaterialPageRoute(builder: (context) => Comment_Page(text_id: text_id)),
               );
             },
           ),

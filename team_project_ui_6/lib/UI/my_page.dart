@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:team_project_ui_6/UI/comment.dart';
 import 'package:team_project_ui_6/UI/post_page_ui.dart';
 import 'package:team_project_ui_6/UI/search_ui.dart';
 import 'package:team_project_ui_6/UI/main_page_ui.dart';
@@ -166,7 +167,7 @@ class _My_PageState extends State<My_Page> {
                                     onTap: () {
                                       Navigator.push(
                                           context, 
-                                          MaterialPageRoute(builder: (context) => Post_Page(text_id: snap['text_id']))
+                                          MaterialPageRoute(builder: (context) => Comment_Page(text_id: snap['text_id']))
                                       );
                                     },
                                   ),

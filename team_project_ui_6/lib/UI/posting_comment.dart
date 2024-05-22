@@ -129,10 +129,7 @@ class _Posting_CommentState extends State<Posting_Comment> {
           }
         }
 
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Post_Page(text_id: text_id))
-        );
+
       }
     } on FirebaseAuthException catch(e) {print(e.toString());}
     catch(e) {print(e.toString());}

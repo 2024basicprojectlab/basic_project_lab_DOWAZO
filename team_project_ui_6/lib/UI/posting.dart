@@ -89,8 +89,6 @@ class _PostingState extends State<Posting> {
           _image == null) {
         showSnackBar(context);
       } else {
-        var countQuerySnapshot = await firestore.collection('Text_info').get();
-        //int num = countQuerySnapshot.docs.length;
         final now = DateTime.timestamp();
         String stringDate = DateFormat("yyyyMMddhhmmss").format(now);
         print("test중입니다" + stringDate);

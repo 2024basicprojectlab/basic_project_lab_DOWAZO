@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:team_project_ui_6/UI/comment.dart';
 import 'package:team_project_ui_6/UI/posting.dart';
 import 'package:team_project_ui_6/UI/posting_comment.dart';
 import 'package:team_project_ui_6/UI/search_ui.dart';
@@ -101,7 +102,8 @@ class _Post_PageState extends State<Post_Page> {
           onPressed: () {
             Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => Posting_Comment(text_id: text_id))
+                MaterialPageRoute(builder: (context) => Comment_Page(text_id: text_id))
+                //MaterialPageRoute(builder: (context) => Posting_Comment(text_id: text_id))
             );
             // Navigate Posting
           },
