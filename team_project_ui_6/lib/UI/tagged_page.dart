@@ -70,7 +70,7 @@ class _Tagged_PageState extends State<Tagged_Page> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot> (
-          stream: FirebaseFirestore.instance.collection('Text_info').snapshots(),
+          stream: FirebaseFirestore.instance.collection('Text_info').orderBy("data", descending: true).snapshots(),
           builder: (context, snapshot) {
             if(snapshot.hasError) {
               return Text('Error ${snapshot.error}');
