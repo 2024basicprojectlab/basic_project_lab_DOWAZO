@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:team_project_ui_6/UI/tagged_page.dart';
@@ -60,6 +62,55 @@ class _SearchState extends State<Search> {
                   });
                 }),
           ),
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('Tag_info').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+
+              // Firestore에서 문서 이름을 가져와서 리스트로 변환
+              List<String> tagList = snapshot.data!.docs.map((DocumentSnapshot document) {
+                return document.id; // 문서 이름을 태그로 사용
+              }).toList();
+
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal, // 좌우 스크롤 가능하게 설정
+                child: Row(
+                  children: tagList.map((tag) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Tagged_Page(tag_info: tag)),
+                          );
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.deepPurple, // 네모 컨테이너의 배경색 설정
+                            borderRadius: BorderRadius.circular(10), // 네모에 둥근 모서리 설정
+                          ),
+                          child: Center(
+                            child: Text(
+                              tag,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              );
+            },
+          ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance.collection('Tag_info').snapshots(),
@@ -89,7 +140,7 @@ class _SearchState extends State<Search> {
                         crossAxisSpacing: 2, // 각 열 사이의 간격
                         childAspectRatio: 3, // 버튼의 가로 세로 비율을 설정
                       ),
-                      itemCount: matchedTags.length,
+                      itemCount: min(matchedTags.length, 8),
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
                           onTap: () {  },

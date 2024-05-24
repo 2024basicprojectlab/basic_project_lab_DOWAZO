@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:team_project_ui_6/UI/comment.dart';
 import 'package:team_project_ui_6/UI/post_page_ui.dart';
@@ -58,6 +59,14 @@ class _Tagged_PageState extends State<Tagged_Page> {
           ),
           actions: [
             IconButton(
+              onPressed: () {},
+              icon: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: Icon(Icons.videogame_asset),
+              ),
+              iconSize: 28,
+            ),
+            IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
                 // Navigator -> Search
@@ -70,45 +79,104 @@ class _Tagged_PageState extends State<Tagged_Page> {
             ),
           ],
         ),
-        body: StreamBuilder<QuerySnapshot> (
-          stream: FirebaseFirestore.instance.collection('Text_info').orderBy("data", descending: true).snapshots(),
-          builder: (context, snapshot) {
-            if(snapshot.hasError) {
-              return Text('Error ${snapshot.error}');
-            }
+        body: Column(
+          children: [
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance.collection('Text_info').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
 
-            switch(snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Center(child: CircularProgressIndicator());
-              default:
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                // Firestore에서 문서 이름을 가져와서 리스트로 변환
+                List<String> idList = snapshot.data!.docs.map((DocumentSnapshot document) {
+                  return document['text_id'] as String; // 문서 이름을 태그로 사용
+                }).toList();
+
+                List<String> titleList = snapshot.data!.docs.map((DocumentSnapshot document) {
+                  return document['title'] as String;
+                }).toList();
+
                 return SingleChildScrollView(
-                  child: Column(
-                    children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                      String imageUrl = document['image_url'];
-                      String title = document['title'];
-                      String text_id = document['text_id'];
-                      List<String> tag_List = List.from(document['tags']);
-
-                      // tag_List에 tag_info가 포함되어 있는지 확인합니다.
-                      if(tag_List.contains(tag_info)) {
-                        // 포함되어 있다면 ImageItem 위젯을 반환합니다.
-                        return ImageItem(
-                          imageUrl: imageUrl,
-                          title: title,
-                          tagList: tag_List,
-                          text_id: text_id,
-                        );
-                      } else {
-                        // 포함되어 있지 않다면 빈 Container를 반환합니다.
-                        return Container();
-                      }
+                  scrollDirection: Axis.horizontal, // 좌우 스크롤 가능하게 설정
+                  child: Row(
+                    children: idList.map((text_id) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Comment_Page(text_id: text_id,)),
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.deepPurple, // 네모 컨테이너의 배경색 설정
+                              borderRadius: BorderRadius.circular(10), // 네모에 둥근 모서리 설정
+                            ),
+                            child: Center(
+                              child: Text(
+                                titleList[idList.indexOf(text_id)],
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
                     }).toList(),
-
                   ),
                 );
-            }
-          },
+              },
+            ),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot> (
+                stream: FirebaseFirestore.instance.collection('Text_info').orderBy("data", descending: true).snapshots(),
+                builder: (context, snapshot) {
+                  if(snapshot.hasError) {
+                    return Text('Error ${snapshot.error}');
+                  }
 
+                  switch(snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return Center(child: CircularProgressIndicator());
+                    default:
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                            String imageUrl = document['image_url'];
+                            String title = document['title'];
+                            String text_id = document['text_id'];
+                            List<String> tag_List = List.from(document['tags']);
+
+                            // tag_List에 tag_info가 포함되어 있는지 확인합니다.
+                            if(tag_List.contains(tag_info)) {
+                              // 포함되어 있다면 ImageItem 위젯을 반환합니다.
+                              return ImageItem(
+                                imageUrl: imageUrl,
+                                title: title,
+                                tagList: tag_List,
+                                text_id: text_id,
+                              );
+                            } else {
+                              // 포함되어 있지 않다면 빈 Container를 반환합니다.
+                              return Container();
+                            }
+                          }).toList(),
+
+                        ),
+                      );
+                  }
+                },
+
+              ),
+            ),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
